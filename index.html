@@ -3,360 +3,352 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Teste de Impressão - Pedido</title>
+    <title>Teste Impressão Térmica</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-            background-color: #f5f5f5;
+            margin: 0;
+            padding: 10px;
+            font-family: 'Courier New', Consolas, monospace;
+            background: #f0f0f0;
         }
         
-        .container {
-            max-width: 600px;
-            margin: 0 auto;
+        .controls {
             background: white;
-            padding: 20px;
+            padding: 15px;
+            margin-bottom: 15px;
             border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            text-align: center;
         }
         
-        .btn-imprimir {
-            background-color: #28a745;
+        .btn {
+            background: #007bff;
             color: white;
             border: none;
-            padding: 12px 24px;
-            border-radius: 4px;
-            cursor: pointer;
+            padding: 12px 20px;
+            margin: 5px;
+            border-radius: 5px;
             font-size: 16px;
-            margin-bottom: 20px;
-            display: block;
-            margin-left: auto;
-            margin-right: auto;
+            cursor: pointer;
+            min-width: 120px;
         }
         
-        .btn-imprimir:hover {
-            background-color: #218838;
-        }
+        .btn-print { background: #28a745; }
+        .btn-toggle { background: #6c757d; }
         
-        .preview-area {
-            border: 2px dashed #ccc;
-            padding: 20px;
-            margin: 20px 0;
-            background: #fafafa;
-        }
-        
-        .pedido-preparo {
-            border: 1px solid #ddd;
-            background-color: white;
-            margin: 10px auto;
-            max-width: 80mm;
-            padding: 10px;
+        /* Formato do recibo térmico */
+        .thermal-receipt {
+            width: 58mm; /* Papel térmico comum */
+            max-width: 220px;
+            margin: 0 auto;
+            background: white;
+            padding: 5mm;
+            font-family: 'Courier New', Consolas, monospace;
+            font-size: 9pt;
+            line-height: 1.2;
+            color: black;
+            border: 1px solid #ccc;
             box-sizing: border-box;
-            font-family: 'Consolas', 'Courier New', monospace;
         }
         
-        .pedido-header h3 {
+        .receipt-header {
             text-align: center;
-            margin: 5px 0;
-            font-size: 14pt;
+            margin-bottom: 8px;
+            border-bottom: 1px dashed #333;
+            padding-bottom: 5px;
         }
         
-        .timestamp {
-            text-align: center;
-            font-size: 10pt;
-            margin-bottom: 10px;
-            color: #777;
-        }
-        
-        .pedido-info {
-            border-top: 1px dashed black;
-            border-bottom: 1px dashed black;
-            padding: 8px 0;
-            margin: 10px 0;
-        }
-        
-        .pedido-info p {
-            margin: 2px 0;
-            font-size: 10pt;
-        }
-        
-        .pedido-itens h4 {
-            margin: 10px 0 5px 0;
+        .receipt-title {
             font-size: 11pt;
-        }
-        
-        .pedido-itens ul {
-            list-style: none;
-            padding: 0;
+            font-weight: bold;
             margin: 0;
         }
         
-        .pedido-itens li {
-            margin-bottom: 5px;
-            font-size: 10pt;
+        .receipt-date {
+            font-size: 8pt;
+            margin: 2px 0 0 0;
         }
         
-        .item-obs {
+        .receipt-info {
+            margin: 8px 0;
+            border-bottom: 1px dashed #333;
+            padding-bottom: 5px;
+        }
+        
+        .receipt-info p {
+            margin: 1px 0;
+            font-size: 8pt;
+        }
+        
+        .receipt-items {
+            margin: 8px 0;
+        }
+        
+        .receipt-items h4 {
+            margin: 0 0 5px 0;
             font-size: 9pt;
-            color: #555;
-            display: block;
-            margin-left: 15px;
-            margin-top: 2px;
+            font-weight: bold;
         }
         
-        .acrescimos-list {
-            list-style: none;
-            padding: 0;
-            margin-left: 15px;
-            font-size: 9pt;
-            color: #666;
+        .item {
+            margin-bottom: 6px;
+            font-size: 8pt;
         }
         
-        .acrescimos-list li {
+        .item-name {
+            font-weight: bold;
             margin-bottom: 1px;
         }
         
-        .valor-total {
-            border-top: 1px dashed black;
-            padding-top: 8px;
-            margin-top: 10px;
-            text-align: right;
-            font-size: 12pt;
-            font-weight: bold;
+        .item-obs {
+            font-size: 7pt;
+            margin-left: 8px;
+            color: #555;
+            margin-bottom: 1px;
         }
-
-        /* Estilos para impressão */
+        
+        .item-extras {
+            font-size: 7pt;
+            margin-left: 8px;
+            color: #666;
+        }
+        
+        .receipt-total {
+            border-top: 1px dashed #333;
+            padding-top: 5px;
+            margin-top: 8px;
+            text-align: right;
+            font-weight: bold;
+            font-size: 10pt;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        /* Media query específica para impressão térmica */
         @media print {
             body {
-                margin: 0;
-                padding: 0;
-                background: white;
+                margin: 0 !important;
+                padding: 0 !important;
+                background: white !important;
+                font-size: 8pt !important;
             }
             
-            body * {
-                visibility: hidden;
-            }
-            
-            .printable-area, .printable-area * {
-                visibility: visible;
-            }
-            
-            .printable-area {
-                position: absolute;
-                left: 0;
-                top: 0;
-                width: 100%;
-                max-width: 80mm;
-                margin: 0 auto;
-                padding: 5mm;
-                box-sizing: border-box;
-                font-family: 'Consolas', 'Courier New', monospace;
-                font-size: 10pt;
-                color: black;
-            }
-            
-            .printable-area h3 {
-                text-align: center;
-                font-size: 12pt;
-                margin-bottom: 5mm;
-                color: black !important;
-            }
-            
-            .printable-area .timestamp {
-                text-align: center;
-                font-size: 8pt;
-                margin-bottom: 5mm;
-                display: block;
-                color: black !important;
-            }
-            
-            .printable-area .pedido-info {
-                border-top: 1px dashed black;
-                border-bottom: 1px dashed black;
-                padding: 3mm 0;
-                margin-bottom: 5mm;
-            }
-            
-            .printable-area .pedido-info p {
-                margin: 1mm 0;
-                color: black !important;
-            }
-            
-            .printable-area .pedido-itens ul {
-                list-style: none;
-                padding: 0;
-                margin: 0;
-            }
-            
-            .printable-area .pedido-itens li {
-                margin-bottom: 2mm;
-                color: black !important;
-            }
-            
-            .printable-area .item-obs {
-                font-size: 8pt;
-                color: #555 !important;
-                display: block;
-                margin-left: 10mm;
-            }
-            
-            .printable-area .acrescimos-list {
-                list-style: none;
-                padding: 0;
-                margin-left: 10mm;
-                font-size: 9pt;
-                color: #666 !important;
-            }
-            
-            .printable-area .acrescimos-list li {
-                margin-bottom: 1mm;
-                color: #666 !important;
-            }
-            
-            .printable-area .valor-total {
-                border-top: 1px dashed black;
-                padding-top: 3mm;
-                margin-top: 5mm;
-                text-align: right;
-                font-size: 11pt;
-                font-weight: bold;
-                color: black !important;
-            }
-            
-            .btn-imprimir, .preview-area, .container {
+            .controls {
                 display: none !important;
             }
+            
+            .thermal-receipt {
+                width: 100% !important;
+                max-width: none !important;
+                margin: 0 !important;
+                padding: 2mm !important;
+                border: none !important;
+                box-shadow: none !important;
+                page-break-inside: avoid;
+            }
+            
+            .receipt-title {
+                font-size: 10pt !important;
+            }
+            
+            .receipt-date {
+                font-size: 7pt !important;
+            }
+            
+            .receipt-info p {
+                font-size: 7pt !important;
+            }
+            
+            .receipt-items h4 {
+                font-size: 8pt !important;
+            }
+            
+            .item {
+                font-size: 7pt !important;
+            }
+            
+            .item-obs {
+                font-size: 6pt !important;
+            }
+            
+            .item-extras {
+                font-size: 6pt !important;
+            }
+            
+            .receipt-total {
+                font-size: 9pt !important;
+            }
+        }
+        
+        /* Estilo para papel contínuo */
+        @page {
+            size: 58mm auto;
+            margin: 0;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1 style="text-align: center; color: #333;">Teste de Impressão - Pedido</h1>
-        <p style="text-align: center; color: #666;">Clique no botão abaixo para imprimir o pedido de exemplo</p>
+    <div class="controls">
+        <h2>Teste Impressão Térmica</h2>
+        <p>Formato: 58mm Paper Roll</p>
         
-        <button class="btn-imprimir" onclick="imprimirPedido()">🖨️ Imprimir Pedido</button>
+        <button class="btn btn-print" onclick="imprimirRecibo()">🖨️ IMPRIMIR</button>
+        <button class="btn btn-toggle" onclick="toggleFormat()">📏 Mudar Tamanho</button>
         
-        <div class="preview-area">
-            <h3>Preview (como aparecerá na tela):</h3>
-            <div class="pedido-preparo" id="pedidoExemplo">
-                <div class="pedido-header">
-                    <h3>Pedido #1234</h3>
-                    <div class="timestamp">03/08/2025 14:30</div>
-                </div>
-                
-                <div class="pedido-info">
-                    <p><strong>Tipo:</strong> Balcão</p>
-                    <p><strong>Local:</strong> Mesa 5</p>
-                </div>
-                
-                <div class="pedido-itens">
-                    <h4>Itens:</h4>
-                    <ul>
-                        <li>
-                            <strong>2x Hambúrguer Especial</strong>
-                            <span class="item-obs">OBS: Sem cebola, ponto da carne mal passado</span>
-                            <ul class="acrescimos-list">
-                                <li>+ Bacon Extra</li>
-                                <li>+ Queijo Cheddar</li>
-                            </ul>
-                        </li>
-                        <li>
-                            <strong>1x Batata Frita Grande</strong>
-                        </li>
-                        <li>
-                            <strong>2x Refrigerante 350ml</strong>
-                            <span class="item-obs">OBS: Coca-Cola gelada</span>
-                        </li>
-                        <li>
-                            <strong>1x Milk-shake Chocolate</strong>
-                            <ul class="acrescimos-list">
-                                <li>+ Chantilly</li>
-                                <li>+ Granulado</li>
-                            </ul>
-                        </li>
-                    </ul>
-                </div>
-                
-                <div class="valor-total">
-                    <strong>Total: R$ 47,50</strong>
-                </div>
-            </div>
-        </div>
-        
-        <div style="margin-top: 20px; padding: 15px; background: #e9ecef; border-radius: 5px;">
-            <h4>Instruções para teste:</h4>
-            <ul>
-                <li>Clique no botão "Imprimir Pedido" acima</li>
-                <li>Na janela de impressão, você pode escolher "Salvar como PDF" para testar sem gastar papel</li>
-                <li>O formato foi otimizado para impressoras térmicas de 80mm</li>
-                <li>Use fonte monoespaçada (Consolas/Courier) para melhor alinhamento</li>
-                <li>Linhas tracejadas separam as seções do pedido</li>
-            </ul>
+        <div style="margin-top: 10px; font-size: 12px; color: #666;">
+            <p>📱 Para celular: Use "Compartilhar" → "Imprimir"</p>
+            <p>🖥️ Para PC: Ctrl+P ou clique em IMPRIMIR</p>
         </div>
     </div>
 
-    <!-- Área que será impressa (oculta na tela) -->
-    <div class="printable-area" id="areImpressao" style="display: none;">
-        <h3>Pedido #1234</h3>
-        <div class="timestamp">03/08/2025 14:30</div>
+    <div class="thermal-receipt" id="recibo">
+        <div class="receipt-header">
+            <h3 class="receipt-title">PEDIDO #1234</h3>
+            <p class="receipt-date">03/08/2025 14:30</p>
+        </div>
         
-        <div class="pedido-info">
-            <p><strong>Tipo:</strong> Balcão</p>
+        <div class="receipt-info">
+            <p><strong>Tipo:</strong> Balcao</p>
             <p><strong>Local:</strong> Mesa 5</p>
         </div>
         
-        <div class="pedido-itens">
-            <h4>Itens:</h4>
-            <ul>
-                <li>
-                    <strong>2x Hambúrguer Especial</strong>
-                    <span class="item-obs">OBS: Sem cebola, ponto da carne mal passado</span>
-                    <ul class="acrescimos-list">
-                        <li>+ Bacon Extra</li>
-                        <li>+ Queijo Cheddar</li>
-                    </ul>
-                </li>
-                <li>
-                    <strong>1x Batata Frita Grande</strong>
-                </li>
-                <li>
-                    <strong>2x Refrigerante 350ml</strong>
-                    <span class="item-obs">OBS: Coca-Cola gelada</span>
-                </li>
-                <li>
-                    <strong>1x Milk-shake Chocolate</strong>
-                    <ul class="acrescimos-list">
-                        <li>+ Chantilly</li>
-                        <li>+ Granulado</li>
-                    </ul>
-                </li>
-            </ul>
+        <div class="receipt-items">
+            <h4>ITENS:</h4>
+            
+            <div class="item">
+                <div class="item-name">2x Hamburguer Especial</div>
+                <div class="item-obs">OBS: Sem cebola, mal passado</div>
+                <div class="item-extras">+ Bacon Extra</div>
+                <div class="item-extras">+ Queijo Cheddar</div>
+            </div>
+            
+            <div class="item">
+                <div class="item-name">1x Batata Frita Grande</div>
+            </div>
+            
+            <div class="item">
+                <div class="item-name">2x Refrigerante 350ml</div>
+                <div class="item-obs">OBS: Coca-Cola gelada</div>
+            </div>
+            
+            <div class="item">
+                <div class="item-name">1x Milk-shake Chocolate</div>
+                <div class="item-extras">+ Chantilly</div>
+                <div class="item-extras">+ Granulado</div>
+            </div>
         </div>
         
-        <div class="valor-total">
-            <strong>Total: R$ 47,50</strong>
+        <div class="receipt-total">
+            TOTAL: R$ 47,50
+        </div>
+    </div>
+    
+    <!-- Área específica só para impressão -->
+    <div class="hidden" id="print-only">
+        <div style="width: 100%; font-family: 'Courier New', monospace; font-size: 8pt; line-height: 1.1;">
+            <div style="text-align: center; margin-bottom: 5mm; border-bottom: 1px dashed black; padding-bottom: 2mm;">
+                <div style="font-size: 10pt; font-weight: bold;">PEDIDO #1234</div>
+                <div style="font-size: 7pt;">03/08/2025 14:30</div>
+            </div>
+            
+            <div style="margin: 5mm 0; border-bottom: 1px dashed black; padding-bottom: 2mm;">
+                <div style="font-size: 7pt;"><strong>Tipo:</strong> Balcao</div>
+                <div style="font-size: 7pt;"><strong>Local:</strong> Mesa 5</div>
+            </div>
+            
+            <div style="margin: 5mm 0;">
+                <div style="font-size: 8pt; font-weight: bold; margin-bottom: 2mm;">ITENS:</div>
+                
+                <div style="margin-bottom: 3mm;">
+                    <div style="font-size: 7pt; font-weight: bold;">2x Hamburguer Especial</div>
+                    <div style="font-size: 6pt; margin-left: 5mm; color: #555;">OBS: Sem cebola, mal passado</div>
+                    <div style="font-size: 6pt; margin-left: 5mm;">+ Bacon Extra</div>
+                    <div style="font-size: 6pt; margin-left: 5mm;">+ Queijo Cheddar</div>
+                </div>
+                
+                <div style="margin-bottom: 3mm;">
+                    <div style="font-size: 7pt; font-weight: bold;">1x Batata Frita Grande</div>
+                </div>
+                
+                <div style="margin-bottom: 3mm;">
+                    <div style="font-size: 7pt; font-weight: bold;">2x Refrigerante 350ml</div>
+                    <div style="font-size: 6pt; margin-left: 5mm; color: #555;">OBS: Coca-Cola gelada</div>
+                </div>
+                
+                <div style="margin-bottom: 3mm;">
+                    <div style="font-size: 7pt; font-weight: bold;">1x Milk-shake Chocolate</div>
+                    <div style="font-size: 6pt; margin-left: 5mm;">+ Chantilly</div>
+                    <div style="font-size: 6pt; margin-left: 5mm;">+ Granulado</div>
+                </div>
+            </div>
+            
+            <div style="border-top: 1px dashed black; padding-top: 2mm; text-align: right; font-size: 9pt; font-weight: bold;">
+                TOTAL: R$ 47,50
+            </div>
         </div>
     </div>
 
     <script>
-        function imprimirPedido() {
-            // Mostrar a área de impressão
-            const areaImpressao = document.getElementById('areImpressao');
-            areaImpressao.style.display = 'block';
-            
-            // Imprimir
-            window.print();
-            
-            // Ocultar novamente após a impressão
-            setTimeout(() => {
-                areaImpressao.style.display = 'none';
-            }, 1000);
+        let currentWidth = 58; // mm
+        
+        function imprimirRecibo() {
+            // Para celular: usar a função de compartilhamento do navegador
+            if (/Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+                if (navigator.share) {
+                    // Se suporta Web Share API
+                    const printContent = document.getElementById('recibo').innerText;
+                    navigator.share({
+                        title: 'Pedido #1234',
+                        text: printContent
+                    }).catch(err => {
+                        // Fallback para impressão normal
+                        window.print();
+                    });
+                } else {
+                    // Fallback para impressão normal
+                    window.print();
+                }
+            } else {
+                // Para desktop
+                window.print();
+            }
         }
-
-        // Detectar quando a impressão é cancelada
-        window.addEventListener('afterprint', function() {
-            document.getElementById('areImpressao').style.display = 'none';
-        });
+        
+        function toggleFormat() {
+            const recibo = document.getElementById('recibo');
+            
+            if (currentWidth === 58) {
+                // Mudar para 80mm
+                currentWidth = 80;
+                recibo.style.width = '80mm';
+                recibo.style.maxWidth = '300px';
+                document.querySelector('.controls p').textContent = 'Formato: 80mm Paper Roll';
+            } else {
+                // Voltar para 58mm
+                currentWidth = 58;
+                recibo.style.width = '58mm';
+                recibo.style.maxWidth = '220px';
+                document.querySelector('.controls p').textContent = 'Formato: 58mm Paper Roll';
+            }
+        }
+        
+        // Detectar se está em dispositivo móvel e dar instruções específicas
+        if (/Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+            document.addEventListener('DOMContentLoaded', function() {
+                const controls = document.querySelector('.controls');
+                const mobileInstructions = document.createElement('div');
+                mobileInstructions.style.cssText = 'background: #e3f2fd; padding: 10px; margin-top: 10px; border-radius: 5px; font-size: 12px;';
+                mobileInstructions.innerHTML = `
+                    <strong>📱 CELULAR DETECTADO!</strong><br>
+                    1. Clique em IMPRIMIR<br>
+                    2. Escolha sua impressora térmica<br>
+                    3. Configure como "Paper Roll"<br>
+                    4. Tamanho: ${currentWidth}mm
+                `;
+                controls.appendChild(mobileInstructions);
+            });
+        }
     </script>
 </body>
 </html>
