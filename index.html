@@ -37,14 +37,14 @@
         
         /* Formato do recibo térmico */
         .thermal-receipt {
-            width: 58mm; /* Papel térmico comum */
-            max-width: 220px;
+            width: 200mm; /* Aumentado para acomodar texto maior */
+            max-width: 800px; /* Aumentado */
             margin: 0 auto;
             background: white;
-            padding: 5mm;
+            padding: 10mm; /* Aumentado */
             font-family: 'Courier New', Consolas, monospace;
-            font-size: 9pt;
-            line-height: 1.2;
+            font-size: 40pt; /* Aumentado 4x */
+            line-height: 1.3;
             color: black;
             border: 1px solid #ccc;
             box-sizing: border-box;
@@ -52,73 +52,73 @@
         
         .receipt-header {
             text-align: center;
-            margin-bottom: 8px;
-            border-bottom: 1px dashed #333;
-            padding-bottom: 5px;
+            margin-bottom: 15px;
+            border-bottom: 3px dashed #333;
+            padding-bottom: 10px;
         }
         
         .receipt-title {
-            font-size: 11pt;
+            font-size: 50pt; /* Aumentado 5x */
             font-weight: bold;
             margin: 0;
         }
         
         .receipt-date {
-            font-size: 8pt;
-            margin: 2px 0 0 0;
+            font-size: 35pt; /* Aumentado 4x */
+            margin: 5px 0 0 0;
         }
         
         .receipt-info {
-            margin: 8px 0;
-            border-bottom: 1px dashed #333;
-            padding-bottom: 5px;
+            margin: 15px 0;
+            border-bottom: 3px dashed #333;
+            padding-bottom: 10px;
         }
         
         .receipt-info p {
-            margin: 1px 0;
-            font-size: 8pt;
+            margin: 5px 0;
+            font-size: 35pt; /* Aumentado 4x */
         }
         
         .receipt-items {
-            margin: 8px 0;
+            margin: 15px 0;
         }
         
         .receipt-items h4 {
-            margin: 0 0 5px 0;
-            font-size: 9pt;
+            margin: 0 0 10px 0;
+            font-size: 40pt; /* Aumentado 4x */
             font-weight: bold;
         }
         
         .item {
-            margin-bottom: 6px;
-            font-size: 8pt;
+            margin-bottom: 12px;
+            font-size: 35pt; /* Aumentado 4x */
         }
         
         .item-name {
             font-weight: bold;
-            margin-bottom: 1px;
+            margin-bottom: 3px;
         }
         
         .item-obs {
-            font-size: 7pt;
-            margin-left: 8px;
+            font-size: 30pt; /* Aumentado 4x */
+            margin-left: 15px;
             color: #555;
-            margin-bottom: 1px;
+            margin-bottom: 3px;
         }
         
         .item-extras {
-            font-size: 7pt;
-            margin-left: 8px;
+            font-size: 30pt; /* Aumentado 4x */
+            margin-left: 15px;
             color: #666;
         }
         
         .receipt-total {
-            border-top: 1px dashed #333;
-            padding-top: 5px;
-            margin-top: 8px;
+            border-top: 3px dashed #333;
+            padding-top: 10px;
+            margin-top: 15px;
             text-align: right;
             font-weight: bold;
-            font-size: 10pt;
+            font-size: 45pt; /* Aumentado 4x */
         }
         
         .hidden {
@@ -131,7 +131,7 @@
                 margin: 0 !important;
                 padding: 0 !important;
                 background: white !important;
-                font-size: 8pt !important;
+                font-size: 35pt !important; /* Aumentado 4x */
             }
             
             .controls {
@@ -142,42 +142,42 @@
                 width: 100% !important;
                 max-width: none !important;
                 margin: 0 !important;
-                padding: 2mm !important;
+                padding: 5mm !important;
                 border: none !important;
                 box-shadow: none !important;
                 page-break-inside: avoid;
             }
             
             .receipt-title {
-                font-size: 10pt !important;
+                font-size: 50pt !important; /* Aumentado 5x */
             }
             
             .receipt-date {
-                font-size: 7pt !important;
+                font-size: 35pt !important; /* Aumentado 5x */
             }
             
             .receipt-info p {
-                font-size: 7pt !important;
+                font-size: 35pt !important; /* Aumentado 5x */
             }
             
             .receipt-items h4 {
-                font-size: 8pt !important;
+                font-size: 40pt !important; /* Aumentado 5x */
             }
             
             .item {
-                font-size: 7pt !important;
+                font-size: 35pt !important; /* Aumentado 5x */
             }
             
             .item-obs {
-                font-size: 6pt !important;
+                font-size: 30pt !important; /* Aumentado 5x */
             }
             
             .item-extras {
-                font-size: 6pt !important;
+                font-size: 30pt !important; /* Aumentado 5x */
             }
             
             .receipt-total {
-                font-size: 9pt !important;
+                font-size: 45pt !important; /* Aumentado 5x */
             }
         }
         
@@ -191,7 +191,7 @@
 <body>
     <div class="controls">
         <h2>Teste Impressão Térmica</h2>
-        <p>Formato: 58mm Paper Roll</p>
+        <p>Formato: 58mm Paper Roll (Fonte Grande)</p>
         
         <button class="btn btn-print" onclick="imprimirRecibo()">🖨️ IMPRIMIR</button>
         <button class="btn btn-toggle" onclick="toggleFormat()">📏 Mudar Tamanho</button>
@@ -321,15 +321,15 @@
             if (currentWidth === 58) {
                 // Mudar para 80mm
                 currentWidth = 80;
-                recibo.style.width = '80mm';
-                recibo.style.maxWidth = '300px';
-                document.querySelector('.controls p').textContent = 'Formato: 80mm Paper Roll';
+                recibo.style.width = '250mm'; /* Aumentado para texto grande */
+                recibo.style.maxWidth = '1000px';
+                document.querySelector('.controls p').textContent = 'Formato: 80mm Paper Roll (Fonte Grande)';
             } else {
                 // Voltar para 58mm
                 currentWidth = 58;
-                recibo.style.width = '58mm';
-                recibo.style.maxWidth = '220px';
-                document.querySelector('.controls p').textContent = 'Formato: 58mm Paper Roll';
+                recibo.style.width = '200mm'; /* Aumentado para texto grande */
+                recibo.style.maxWidth = '800px';
+                document.querySelector('.controls p').textContent = 'Formato: 58mm Paper Roll (Fonte Grande)';
             }
         }
         
